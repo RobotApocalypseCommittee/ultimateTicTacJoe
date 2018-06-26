@@ -1,0 +1,33 @@
+
+/* http://www.paletton.com/#uid=13n080kqFA-22+PlDULyoqusrey */
+
+:root {
+  --color-primary-1: #2194AF;
+  --color-primary-2: #EFFBFE;
+  --color-primary-3: #51CFEC; 
+  --color-primary-4: #036A83;
+  --color-primary-5: #0A3C48;
+}
+  
+div {
+  border: 10px solid var(--color-primary-2);
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: var(--color-primary-5);
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
