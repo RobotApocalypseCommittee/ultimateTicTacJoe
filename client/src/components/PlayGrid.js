@@ -4,6 +4,11 @@ import '../App.css';
 import styled from 'styled-components';
 import 'animate.css';
 
+const gridSizeFactor = 4;
+const subGridSizeFactor = 13;
+const gridRowGapFactor = 50;
+const subGridRowGapFactor = gridRowGapFactor*3;
+
 export default class PlayGrid extends Component {
 
     constructor(props) {
@@ -12,11 +17,23 @@ export default class PlayGrid extends Component {
             currentBoard: 0,
             playerTurn: 0,
             crossedCells: [],
-            circledCells: []
+            circledCells: [],
+            width: 0, height: 0
         };
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    }
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
     }
     
-    
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
 
     gridItems = () => {
         var items = [];
@@ -27,24 +44,20 @@ export default class PlayGrid extends Component {
                 </Cell>);
             }
         }
-        console.log(items);
         return items;
     }
     
     render () {
         return (
-            <div className="mainGrid animated fadeInUp" >
-                <Grid
-                    columns="repeat(3, 300px)"
-                    rows="repeat(3, 300px)"
-                    justifyContent="space-around"
-                    gap="5px"
+                <Grid className="mainGrid animated fadeInUp" 
+                    columns={"repeat(3, " + this.state.width/gridSizeFactor+ "px)"}
+                    rows={"repeat(3, " + this.state.width/gridSizeFactor+ "px)"}
+                    gap={this.state.width/gridRowGapFactor+"px"}
                 >
                     {
                         this.gridItems()
                     }
                 </Grid>
-            </div>
         );
     }
 
@@ -57,22 +70,31 @@ class SubGrid extends PlayGrid {
         super();
         this.state = {
             class: "hiddenItem",
+            rowWidth: 300,
             crossedCells: [],
-            circledCells: []
+            circledCells: [],
+            width: 0, height: 0
         };
+        
     }
 
     componentDidMount () {
         this.timeoutId = setTimeout(function () {
             this.setState({class: "animated fadeInUp main-grid-cell"});
         }.bind(this), this.props.delay);
-        console.log(this.props.delay);
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
       } 
     
     componentWillUnmount () {
       if (this.timeoutId) {
          clearTimeout(this.timeoutId);
       }
+      window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
     gridItems = () => {
@@ -80,27 +102,42 @@ class SubGrid extends PlayGrid {
         for (var i = 0; i < 3; i ++) {
             for (var j = 0; j < 3; j++) {
                 items.push(<Cell center middle className="sub-grid-cell" key={i*3+j} left={j+1} top={i+1}>
-                    {i*3+j}
+                    <GridSquare />
                 </Cell>);
             }
         }
-        console.log(items);
         return items;
     }
 
         render () {
             return (
-                <div className={this.state.class} >
-                    <Grid
-                        columns="repeat( 3, 80px )"
-                        rows="repeat( 3, 80px )"
-                        justifyContent="space-around"
+                    <Grid className={this.state.class}
+                        columns={"repeat( 3, "+ this.state.width/subGridSizeFactor +"px )"}
+                        rows={"repeat( 3, " + this.state.width/subGridSizeFactor +"px )"}
+                        gap={this.state.width/subGridRowGapFactor+"px"}
                     >
                         {
                             this.gridItems()
                         }
                     </Grid>
-                </div>
             );
         }
     }
+
+class GridSquare extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            clicked: false,
+            icon: 0
+        }
+    }
+
+    render () {
+
+        return (
+            <div>B</div>
+        )
+    }
+    
+}
