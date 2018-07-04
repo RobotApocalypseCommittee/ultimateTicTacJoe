@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "express": "latest",
+    "nanoid": "^1.0.4",
     "shortid": "^2.2.8",
     "socket.io": "^2.1.1"
   },
