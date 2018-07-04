@@ -1,21 +1,18 @@
 {
   "name": "ultimatetictacjoe",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
+    "express": "latest",
+    "shortid": "^2.2.8",
+    "socket.io": "^2.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server.js",
+    "client": "node start_client.js"
   },
   "devDependencies": {
-    "animate.css": "^3.6.1",
-    "styled-components": "^3.3.3",
-    "styled-css-grid": "^0.11.0"
+    "concurrently": "3.1.0"
   }
 }
