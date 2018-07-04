@@ -4,13 +4,33 @@
 :root {
   --color-primary-1: #2194AF;
   --color-primary-2: #EFFBFE;
-  --color-primary-3: #51CFEC; 
+  --color-primary-3: #B5F1FF; 
   --color-primary-4: #036A83;
   --color-primary-5: #0A3C48;
 }
   
-div {
-  border: 10px solid var(--color-primary-2);
+.hiddenItem {
+  visibility: hidden;
+}
+
+.mainGrid {
+  height: 900px;
+  width: 920px;
+  margin: auto;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--color-primary-1);
+}
+
+.main-grid-cell {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--color-primary-4);
+}
+
+.sub-grid-cell{
+  border-radius: 5px;
+  background-color: var(--color-primary-3);
 }
 
 .App {
