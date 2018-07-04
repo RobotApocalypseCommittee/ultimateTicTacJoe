@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import styled from 'styled-components';
+import './sockface.js';
 
 import PlayGrid from './components/PlayGrid.js'
 
