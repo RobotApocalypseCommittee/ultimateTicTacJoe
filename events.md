@@ -14,15 +14,18 @@
     server->client
     sent on connect, with player ID
 -   begin-game
-    server->client
+    server->clients
     send when the game begins(necessary?)
 -   turn-done
     client->server
     send when player has selected a square
 -   next-turn
-    server->client
+    server->clients
     send when the previous turn has been processed, and the next player must act
 -   ended-game
-    server->client
+    server->clients
     send when the game has been terminated
     (a win, loss, or a player disconnects)
+-   updated-board
+    server->clients
+    send when the board should be updated

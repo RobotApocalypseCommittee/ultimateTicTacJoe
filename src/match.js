@@ -98,6 +98,7 @@ class Match {
     process_turn(turn_object) {
         if (this.was_valid_turn(turn_object)) {
             this.board[turn_object.mainIndex][turn_object.subIndex] = turn_object.playerIndex;
+            this.broadcast("updated-board", this.board);
             if (this.checkForWins() !== -1) {
                 let winPacket = {
                     type: "win",
