@@ -1,5 +1,5 @@
 const express = require("express");
-const app = require("./src/app")
+const app = require("./src/app");
 const http = require("http");
 
 app.set("port", process.env.PORT || 3001);

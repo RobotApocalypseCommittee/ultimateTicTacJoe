@@ -10,6 +10,7 @@ class UserStore {
     add_user(user) {
         var id = nanoid();
         user.on("disconnect", () => {
+          console.log("User %s disconnected.", id)
             this.remove_user(id);
         });
         this.current_users[id] = user;

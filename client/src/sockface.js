@@ -7,7 +7,9 @@ import io from 'socket.io-client';
 class Communicator {
   constructor(){
     this.playerID = null;
-    this.socket = io(window.location.protocol + "//" + window.location.host);
+    this.socket = io("ws://" + window.location.host);
+    window.io = this.socket;
+    console.log("Connected Socket")
     this.subscribeToRegistration((id)=> this.playerID = id);
   }
   subscribeToRegistration(cb) {
@@ -23,7 +25,7 @@ class Communicator {
       this.socket.emit(evtName, data);
       console.log("Emitted %s", evtName);
     } else {
-      throw "A playerID has not yet been assigned!";
+      throw new Error("A playerID has not yet been assigned!");
     }
   }
   createGame(XOProtocol) {

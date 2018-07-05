@@ -14,16 +14,18 @@ class App extends Component {
       playerIndex: null,
       letterSet: null
     };
-    communicator.subscribeToRegistration((userID)=>this.setState({userID}));
-    if (window.location.hash) {
-      this.state.gameID=window.location.hash.substring(1);
-    }
+    communicator.subscribeToRegistration((userID) => {
+      this.setState({userID});
+      if (window.location.hash) {
+        communicator.joinGame(window.location.hash.substring(1));
+      }
+    });
     communicator.subscribeToJoin((playerIndex, playerLetter, matchID)=>{
       let letterSet = ["X", "O"];
       if (playerLetter === "O") letterSet.reverse();
       if (playerIndex === 1) letterSet.reverse();
       this.setState({matchID, playerIndex, letterSet});
-    })
+    });
   }
 
   render() {

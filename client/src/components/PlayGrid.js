@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Grid, Cell} from 'styled-css-grid';
+import {Cell, Grid} from 'styled-css-grid';
 import '../App.css';
-import styled from 'styled-components';
 import 'animate.css';
 
 const gridSizeFactor = 4;
@@ -45,7 +44,7 @@ export default class PlayGrid extends Component {
             }
         }
         return items;
-    }
+    };
     
     render () {
         return (
@@ -107,7 +106,7 @@ class SubGrid extends PlayGrid {
             }
         }
         return items;
-    }
+    };
 
         render () {
             return (
