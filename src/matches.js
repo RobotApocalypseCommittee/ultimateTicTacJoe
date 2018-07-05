@@ -7,10 +7,9 @@ class Matches {
     get_match(id) {
         return this.matches[id]
     }
-    create_match(){
-        var new_match = new Match();
-        this.matches[new_match.id] = new_match;
-        return new_match
+    add_match(match){
+      this.matches[match.id] = match;
+        return match
     }
     remove_match(id){
         delete this.matches[id];

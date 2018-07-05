@@ -7,4 +7,8 @@ export default class GameView extends Component {
         <PlayGrid/>
     )
   }
+
+  constructor(props) {
+    super(props);
+  }
 }

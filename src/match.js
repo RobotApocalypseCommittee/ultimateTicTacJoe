@@ -2,6 +2,7 @@
 const shortid = require("shortid");
 const users = require("./user_store");
 const matches = require("./matches");
+
 class Match {
     constructor(XOPolicy) {
         this.id = shortid.generate();
@@ -116,3 +117,5 @@ class Match {
         matches.remove_match(this.id);
     }
 }
+
+module.exports = Match;

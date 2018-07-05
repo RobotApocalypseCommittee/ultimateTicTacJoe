@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import communicator from '../sockface';
 
 export default class GameCreator extends Component {
   createGame() {
+    communicator.createGame(this.state.XOValue);
     console.log("Creating game with selected %s", this.state.XOValue);
   }
   handleXOChange(event) {

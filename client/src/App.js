@@ -3,19 +3,27 @@ import './App.css';
 
 import GameView from "./components/GameView";
 import GameCreator from './components/GameCreator'
-import {subscribeToRegistration} from "./sockface";
+import communicator from "./sockface";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userID: null,
-      gameID: null
+      matchID: null,
+      playerIndex: null,
+      letterSet: null
     };
-    subscribeToRegistration((userID)=>this.setState({userID}));
+    communicator.subscribeToRegistration((userID)=>this.setState({userID}));
     if (window.location.hash) {
       this.state.gameID=window.location.hash.substring(1);
     }
+    communicator.subscribeToJoin((playerIndex, playerLetter, matchID)=>{
+      let letterSet = ["X", "O"];
+      if (playerLetter === "O") letterSet.reverse();
+      if (playerIndex === 1) letterSet.reverse();
+      this.setState({matchID, playerIndex, letterSet});
+    })
   }
 
   render() {
@@ -25,9 +33,9 @@ class App extends Component {
             <p> header - menus and shit </p>
             <h1 className="App-title">Welcome to ULTIMATE TIC TAC TOE</h1>
           </header>
-          { this.state.gameID === null
+          { this.state.matchID === null
               ? <GameCreator/>
-              : <GameView gameID={this.state.gameID}/>
+              : <GameView matchID={this.state.matchID} playerIndex={this.state.playerIndex} letterSet={this.state.letterSet}/>
           }
         </div>
     );
