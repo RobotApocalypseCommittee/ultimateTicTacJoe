@@ -6,6 +6,6 @@ import io from 'socket.io-client';
 
 const socket = io(window.location.protocol + "//" + window.location.host);
 
-socket.on("user-registered", (obj)=>{
-    console.log("Got user ID %s", obj.playerID)
-})
+export function subscribeToRegistration(cb) {
+  socket.on("user-registered", (obj)=>cb(obj.playerID));
+}
