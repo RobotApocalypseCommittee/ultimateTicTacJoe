@@ -1,0 +1,21 @@
+
+let gameStates = {
+  PREGAME: "PREGAME",
+  PREGAMESTART: "PREGAMESTART",
+  WAITFORTURN: "WAITFORTURN",
+  PERFORMINGTURN: "PERFORMINGTURN",
+  GAMEENDED: "GAMEENDED",
+  DISCONNECTED: "DISCONNECTED"
+};
+
+export default gameStates;
+
+let gameEndings = {
+  WIN: "WIN",
+  LOSS: "LOSS",
+  DISCONNECTION: "DISCONNECTION",
+  UNENDED: "UNENDED"
+};
+
+export {gameEndings};
+

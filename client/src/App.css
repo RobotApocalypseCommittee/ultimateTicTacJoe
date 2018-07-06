@@ -38,13 +38,13 @@
 
 .App-header {
   background-color: var(--color-primary-5);
-  height: 150px;
-  padding: 20px;
   color: white;
+  overflow: auto;
 }
 
 .App-title {
   font-size: 1.5em;
+  margin: 1em auto;
 }
 
 .App-intro {

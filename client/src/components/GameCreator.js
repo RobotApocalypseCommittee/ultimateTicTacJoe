@@ -17,7 +17,7 @@ export default class GameCreator extends Component {
             <option value="1">O</option>
             <option value="2">Random</option>
           </select>
-          <button onClick={this.createGame}/>
+          <button className="button-primary" onClick={this.createGame}>Create Game</button>
         </div>
     )
   }

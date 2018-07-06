@@ -7,9 +7,11 @@ import io from 'socket.io-client';
 class Communicator {
   constructor(){
     this.playerID = null;
-    this.socket = io("ws://" + window.location.host);
+    this.socket = io("ws://" + window.location.host, {
+      reconnection: false
+    });
     window.io = this.socket;
-    console.log("Connected Socket")
+    console.log("Connected Socket");
     this.subscribeToRegistration((id)=> this.playerID = id);
   }
   subscribeToRegistration(cb) {
@@ -17,6 +19,12 @@ class Communicator {
   }
   subscribeToJoin(cb) {
     this.socket.on("joined-game", (obj)=>cb(obj.playerIndex, obj.playerLetter, obj.matchID));
+  }
+  subscribeToBoardUpdate(cb) {
+    this.socket.on("updated-board", cb);
+  }
+  subscribeToDisconnect(cb){
+    this.socket.on("disconnect", cb);
   }
   emit(evtName, data){
     if (this.playerID !== null) {
