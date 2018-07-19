@@ -10,57 +10,41 @@ export function generateEmptyBoard() {
   return x;
 }
 
+export function getSubWin(subBoard){
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (subBoard[a] && subBoard[a] === subBoard[b] && subBoard[a] === subBoard[c] && subBoard[a] !== -1) {
+        return {winner:subBoard[a], line:lines[i]};
+      }
+    }
+    return null;
+}
+
+export function checkSubWin(subBoard){
+  return getSubWin(subBoard) !== null;
+}
+
+export function getWin(board) {
+  let tempBoard = board.map(subBoard=>{
+    let winner = getSubWin(subBoard);
+    if (winner === null) {
+      return -1;
+    }
+    return winner
+  });
+  return getSubWin(tempBoard)
+}
+
 export function checkWin(board) {
-
-  var checkLine = function(temp) {
-    if (temp[0]==-1) {
-      return null;
-    } else if (temp[0]==temp[1] && temp[0] == temp[2]) {
-      return temp[0];
-    }
-  }
-  
-  var checkWin = function (grid) {
-    //Check Rows
-    for (var row = 0; row < 3; row++) {
-      var temp = [];
-      for (var square = 0; square < 3; square++) {
-        temp.push(grid[square + 3*row]);
-      }
-      if (checkLine(temp) != null) {
-        return checkLine(temp);
-      }
-    }
-    //Check Columns
-    for (var col = 0; col < 3; col++) {
-      var temp = [];
-      for (var square = 0; square < 3; square++) {
-        temp.push(grid[square]);
-      }
-      if (checkLine(temp) != null) {
-        return checkLine(temp);
-      }
-    }
-    //Check Diags
-    var diags = [[0, 4, 8],[2, 4, 6]]
-    for (var i = 0; i < 2; i++) {
-      var temp = [];
-      for (var j = 0; j < 3; j++) {
-          temp.push(grid[j]);
-      }
-      if (checkLine(temp) != null) {
-        return checkLine(temp);
-      }
-    }
-
-    return False;
-  }
-  // yo throw some tests at this pls
-
-
-  for (var subGrid = 0; subGrid < 9; subGrid++) {
-      checkWin(board[subGrid]);
-      //Some other stuff which I'll write later
-
-  }
+  return getWin(board) !== null;
 }
