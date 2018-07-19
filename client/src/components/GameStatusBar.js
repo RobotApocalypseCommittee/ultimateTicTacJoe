@@ -27,7 +27,10 @@ export default class GameStatusBar extends Component {
   }
   render() {
     return (
-        <Div><Input type="text" value={this.props.url} readOnly/><Item>{this.statuses[this.props.state]}</Item></Div>
+        <Div>
+          <Input type="text" value={this.props.url} readOnly/>
+          <Item>{this.statuses[this.props.state]}</Item>
+        </Div>
     )
   }
 }

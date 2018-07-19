@@ -7,6 +7,8 @@ import communicator from "./sockface";
 import gameStates, {gameEndings} from "./GameStates";
 import {generateEmptyBoard} from "./utils";
 import ReactModal from 'react-modal';
+import styled from "styled-components";
+
 
 // TODO: Should probably be using redux, be CBA right now
 class App extends Component {
@@ -14,11 +16,11 @@ class App extends Component {
     super(props);
     this.state = {
       userID: null,
-        matchID: null,
-        playerIndex: null,
-        letterSet: null,
-        board: null,
-        ending: gameEndings.UNENDED,
+      matchID: null,
+      playerIndex: null,
+      letterSet: null,
+      board: null,
+      ending: gameEndings.UNENDED,
       status: gameStates.DISCONNECTED
     };
     communicator.subscribeToRegistration((userID) => {
@@ -65,9 +67,11 @@ class App extends Component {
           />
         }
         <ReactModal isOpen={this.state.status === gameStates.DISCONNECTED} contentLabel="Connection Failed">
-          <p>We cannot connect to the server, and so you cannot play :(</p>
-          <p>Reload to attempt a reconnection</p>
-          <button onClick={window.location.reload}>Reload</button>
+          <dialogDiv>
+            <p>We cannot connect to the server, and so you cannot play :(</p>
+            <p>Reload to attempt a reconnection</p>
+            <button onClick={window.location.reload}>Reload</button>
+          </dialogDiv>
         </ReactModal>
       </div>
 

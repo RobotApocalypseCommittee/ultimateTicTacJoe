@@ -11,11 +11,12 @@
   
 .hiddenItem {
   visibility: hidden;
+  
 }
 
 .mainGrid {
   width: 80%;
-    margin: 10px auto auto;
+  margin: 10px auto auto;
   padding: 2%;
   border-radius: 5px;
   background-color: var(--color-primary-1);
