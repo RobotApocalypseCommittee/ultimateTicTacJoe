@@ -4,48 +4,20 @@ import './App.css';
 import GameView from "./components/GameView";
 import GameCreator from './components/GameCreator'
 import communicator from "./sockface";
-import gameStates, {gameEndings} from "./GameStates";
-import {generateEmptyBoard} from "./utils";
+import gamestate from "./GameState";
+import gameStates from "./GameStates";
 import ReactModal from 'react-modal';
 
 
-// TODO: Should probably be using redux, be CBA right now
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      userID: null,
-      matchID: null,
-      playerIndex: null,
-      letterSet: null,
-      board: null,
-      ending: gameEndings.UNENDED,
-      status: gameStates.DISCONNECTED
-    };
     communicator.subscribeToRegistration((userID) => {
-      this.setState({userID, status: gameStates.PREGAME});
       if (window.location.hash) {
         communicator.joinGame(window.location.hash.substring(1));
       }
     });
-    communicator.subscribeToJoin((playerIndex, playerLetter, matchID) => {
-      let letterSet = ["X", "O"];
-      if (playerLetter === "O") letterSet.reverse();
-      if (playerIndex === 1) letterSet.reverse();
-      this.setState({
-          matchID,
-          letterSet,
-          playerIndex,
-          board: generateEmptyBoard(),
-        status: gameStates.PREGAMESTART
-      });
-    });
-    communicator.subscribeToBoardUpdate((newBoard)=>{
-      this.setState({board:newBoard});
-    });
-    communicator.subscribeToDisconnect(()=>{
-      this.setState({status:gameStates.DISCONNECTED});
-    });
+
   }
 
   render() {
@@ -54,18 +26,11 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Welcome to ULTIMATE TIC TAC TOE</h1>
         </header>
-        {this.state.status === gameStates.PREGAME
+        {this.props.status === gameStates.PREGAME || this.props.status === gameStates.DISCONNECTED
           ? <GameCreator/>
-          :
-          <GameView
-            matchID={this.state.matchID}
-            playerIndex={this.state.playerIndex}
-            letterSet={this.state.letterSet}
-            status={this.state.status}
-            board={this.state.board}
-          />
+          : <GameView/>
         }
-        <ReactModal isOpen={this.state.status === gameStates.DISCONNECTED} contentLabel="Connection Failed">
+        <ReactModal isOpen={this.props.status === gameStates.DISCONNECTED} contentLabel="Connection Failed" ariaHideApp={false}>
             <p>We cannot connect to the server, and so you cannot play :(</p>
             <p>Reload to attempt a reconnection</p>
             <button onClick={window.location.reload}>Reload</button>
@@ -76,4 +41,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default gamestate.subscribe(["status"], App);

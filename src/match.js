@@ -94,9 +94,7 @@ class Match {
   was_valid_turn(turn_object) {
     return (
         // Correct Player made turn
-        turn_object.playerIndex === this.next_move_criteria.playerIndex &&
-        // Player is who they say they are
-        turn_object.playerID === this.playerIDs[turn_object.playerIndex] &&
+      this.next_move_criteria.playerIndex === turn_object.playerIndex &&
         // Player placed in correct main square
         (turn_object.mainIndex === this.next_move_criteria.mainIndex || this.next_move_criteria.mainIndex === -1) &&
         // Square was available for placement
@@ -104,8 +102,16 @@ class Match {
     );
   }
 
+  checkForWins(){
+    // TODO: Implement
+    return -1;
+  }
+
   process_turn(turn_object) {
+    console.log("Processing turn");
+    turn_object.playerIndex = this.playerIDs.indexOf(turn_object.playerID);
     if (this.was_valid_turn(turn_object)) {
+      console.log("Valid turn received!");
       this.board[turn_object.mainIndex][turn_object.subIndex] = turn_object.playerIndex;
       this.broadcast("updated-board", this.board);
       if (this.checkForWins() !== -1) {

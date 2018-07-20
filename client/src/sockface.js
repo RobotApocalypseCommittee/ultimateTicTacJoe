@@ -26,6 +26,16 @@ class Communicator {
   subscribeToDisconnect(cb){
     this.socket.on("disconnect", cb);
   }
+  subscribeToBeginGame(cb){
+    this.socket.on("begin-game", cb);
+  }
+  subscribeToTurnChange(cb){
+    this.socket.on("next-turn", (obj)=>cb(obj.playerIndex, obj.mainIndex));
+  }
+  subscribeToEndGame(cb){
+    this.socket.on("ended-game", (obj)=>cb(obj.type, obj.playerID))
+  }
+
   emit(evtName, data){
     if (this.playerID !== null) {
       // Every packet must contain userID
@@ -41,6 +51,9 @@ class Communicator {
   }
   joinGame(matchID){
     this.emit("join-game", {matchID});
+  }
+  makeTurn(mainIndex, subIndex){
+    this.emit("turn-done", {mainIndex, subIndex});
   }
 
 }

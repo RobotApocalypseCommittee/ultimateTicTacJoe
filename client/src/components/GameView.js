@@ -1,20 +1,18 @@
 import React, {Component} from 'react';
-import PlayGrid from "./PlayGrid";
+import PlayGridWithSubscription from "./PlayGrid";
 import ReactModal from 'react-modal';
 import GameStatusBar from "./GameStatusBar";
+import gameState from "../GameState"
 
 
-export default class GameView extends Component {
-  constructor(props) {
-    super(props);
-  }
+class GameView extends Component {
 
   render() {
     let url = window.location.protocol + "//" + window.location.host + "/#" + this.props.matchID;
     return (
       <div>
-        <GameStatusBar url={url} state={1}/>
-        <PlayGrid/>
+        <GameStatusBar url={url} state={this.props.status}/>
+        <PlayGridWithSubscription hello={"hi"}/>
         <GameEndDialog isOpen={this.props.gameEnded} text={"hi"}/>
       </div>
     )
@@ -24,10 +22,12 @@ export default class GameView extends Component {
 class GameEndDialog extends Component {
   render() {
     return (
-      <ReactModal isOpen={this.props.isOpen} contentLabel="Game Ended">
+      <ReactModal isOpen={this.props.isOpen} contentLabel="Game Ended"  ariaHideApp={false}>
         <p>{this.props.text}</p>
         <button onClick={window.location.reload}>New Game</button>
       </ReactModal>
     )
   }
 }
+
+export default gameState.subscribe(["status", "matchID"], GameView);

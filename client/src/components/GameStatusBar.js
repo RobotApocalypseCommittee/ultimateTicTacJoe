@@ -19,11 +19,14 @@ const Input = styled.input`
 export default class GameStatusBar extends Component {
   constructor(props){
     super(props);
-    this.statuses = [
-        "Waiting for player to join",
-        "Waiting for other player's turn",
-        "Waiting for your turn"
-    ]
+    this.statuses = {
+      PREGAME: "Game does not exist yet?",
+      PREGAMESTART: "Waiting for other player to join.",
+      WAITFORTURN: "Waiting for other player's turn.",
+      PERFORMINGTURN: "Make your turn.",
+      GAMEENDED: "Game Ended",
+      DISCONNECTED: "You have been disconnected."
+    };
   }
   render() {
     return (
