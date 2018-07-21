@@ -127,3 +127,6 @@ typings/
 
 # Serverless directories
 .serverless
+
+# UTTLogic Copy
+client/src/UTTLogic.js

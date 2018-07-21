@@ -2,18 +2,12 @@
 const shortid = require("shortid");
 const users = require("./user_store");
 const matches = require("./matches");
+const UTTTLogic = require("../UTTLogic");
 
 class Match {
   constructor(XOPolicy) {
     this.id = shortid.generate();
-    this.board = [];
-    for (var i = 0; i < 9; i++) {
-      var subsquare = [];
-      for (var j = 0; j < 9; j++) {
-        subsquare.push(-1);
-      }
-      this.board.push(subsquare);
-    }
+    this.board = UTTTLogic.generateEmptyBoard();
     this.next_move_criteria = null;
     this.playerIDs = [];
 
@@ -78,52 +72,24 @@ class Match {
 
   }
 
-  update_next_move_criteria(last_turn) {
-    let criteria = {};
-    // Swap indexes
-    criteria.playerIndex = this.playerIDs.indexOf(last_turn.playerID) ? 0 : 1;
-    criteria.mainIndex = last_turn.subIndex;
-    if (this.board[criteria.mainIndex].indexOf("-") === -1) {
-      // If square full, user can select any square(-1)
-      criteria.mainIndex = -1;
-    }
-    this.next_move_criteria = criteria;
-    return criteria;
-  }
-
-  was_valid_turn(turn_object) {
-    return (
-        // Correct Player made turn
-      this.next_move_criteria.playerIndex === turn_object.playerIndex &&
-        // Player placed in correct main square
-        (turn_object.mainIndex === this.next_move_criteria.mainIndex || this.next_move_criteria.mainIndex === -1) &&
-        // Square was available for placement
-        (this.board[turn_object.mainIndex][turn_object.subIndex] === -1)
-    );
-  }
-
-  checkForWins(){
-    // TODO: Implement
-    return -1;
-  }
 
   process_turn(turn_object) {
     console.log("Processing turn");
     turn_object.playerIndex = this.playerIDs.indexOf(turn_object.playerID);
-    if (this.was_valid_turn(turn_object)) {
+    if (UTTTLogic.validateMove(this.board, this.next_move_criteria, turn_object)) {
       console.log("Valid turn received!");
       this.board[turn_object.mainIndex][turn_object.subIndex] = turn_object.playerIndex;
       this.broadcast("updated-board", this.board);
-      if (this.checkForWins() !== -1) {
+      if (UTTTLogic.checkWin(this.board)) {
         let winPacket = {
           type: "win",
-          playerID: this.checkForWins()
+          playerID: UTTTLogic.getWin(this.board)
         };
         this.broadcast("ended-game", winPacket);
         this.destroy();
         return;
       }
-      this.update_next_move_criteria(turn_object);
+      this.next_move_criteria = UTTTLogic.calculateNextCriteria(this.board, turn_object);
       this.broadcast("next-turn", this.next_move_criteria);
     }
   }
