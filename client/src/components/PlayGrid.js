@@ -1,18 +1,34 @@
 import React, {Component} from 'react';
-import {Cell, Grid} from 'styled-css-grid';
-import '../App.css';
+
 import 'animate.css';
+import styled from 'styled-components';
 import gameState from "../GameState";
 import gameStates from "../GameStates";
 import communicator from "../sockface";
+import SubGrid from "./SubGrid";
 
 const gridSizeFactor = 4;
 const subGridSizeFactor = 13;
 const gridRowGapFactor = 50;
 const subGridRowGapFactor = gridRowGapFactor * 3;
 
-class PlayGrid extends Component {
+const Div = styled.div.attrs({
+  minimumavailablespace: props =>
+    (props.width < props.height
+    ? props.width : props.height) * 0.9
+})`
+align-content: center;
+justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, ${props => props.minimumavailablespace/3}px);
+  grid-template-rows: repeat(3, ${props => props.minimumavailablespace/3}px);
+  grid-gap: 1vmin;
+  background-color: var(--color-primary-1);
+  flex-grow: 1;
+  
+  `;
 
+class PlayGrid extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,22 +37,10 @@ class PlayGrid extends Component {
       width: 0,
       height: 0
     };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-    this.handleCellClick = this.handleCellClick.bind(this)
+    this.handleCellClick = this.handleCellClick.bind(this);
+    this.throttleUpdates = this.throttleUpdates.bind(this);
   }
 
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({width: window.innerWidth, height: window.innerHeight});
-  }
 
   handleCellClick(subSquare, cell){
     console.log("Square: ", subSquare, ", Cell: ", cell);
@@ -45,17 +49,46 @@ class PlayGrid extends Component {
     }
   }
 
+  componentDidMount(){
+    this.resizeTimer = null;
+    window.addEventListener("resize", this.throttleUpdates);
+    this.updateSizing();
+  }
+
+  throttleUpdates(){
+    if (!this.resizeTimer){
+      this.resizeTimer = setTimeout(()=>{
+        this.resizeTimer = null;
+        this.updateSizing();
+      }, 66);
+    }
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener("resize", this.throttleUpdates);
+    if (this.resizeTimer){
+      clearTimeout(this.resizeTimer);
+    }
+  }
+  updateSizing(){
+    const element = document.getElementById("playGrid");
+    this.setState({
+      width: element.clientWidth,
+      height: element.clientHeight
+    })
+  }
+
 
   gridItems(){
     let items = [];
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
-        items.push(<Cell center middle key={i * 3 + j} left={j + 1} top={i + 1}>
+        items.push(
           <SubGrid delay={(i * 3 + j) * 100}
                    onCellClick={this.handleCellClick.bind(this, items.length)}
                    board={this.props.board[items.length]}
-          />
-        </Cell>);
+                   key={items.length}
+          />);
       }
     }
     return items;
@@ -63,94 +96,13 @@ class PlayGrid extends Component {
 
   render() {
     return (
-      <Grid className="mainGrid animated fadeInUp"
-            columns={"repeat(3, " + this.state.width / gridSizeFactor + "px)"}
-            rows={"repeat(3, " + this.state.width / gridSizeFactor + "px)"}
-            gap={this.state.width / gridRowGapFactor + "px"}
-      >
+      <Div id="playGrid" width={this.state.width} height={this.state.height}>
         {
           this.gridItems()
         }
-      </Grid>
+      </Div>
     );
   }
 }
 
 export default gameState.subscribe(["board", "playerIndex"], PlayGrid)
-
-
-const SubGrid = gameState.subscribe(["letterSet"], class extends PlayGrid {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      class: "hiddenItem",
-      rowWidth: 300,
-      crossedCells: [],
-      circledCells: [],
-      width: 0, height: 0
-    };
-
-  }
-
-  componentDidMount() {
-    this.timeoutId = setTimeout(function () {
-      this.setState({class: "animated fadeInUp main-grid-cell"});
-    }.bind(this), this.props.delay);
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
-    window.removeEventListener('resize', this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({width: window.innerWidth, height: window.innerHeight});
-  }
-
-  gridItems() {
-    let items = [];
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        items.push(<GridSquare key={items.length}
-                               row={j}
-                               column={i}
-                               onClick={this.props.onCellClick.bind(null, items.length)}>
-          {this.props.board[items.length] === -1
-          ? ""
-          : this.props.letterSet[this.props.board[items.length]]}
-        </GridSquare>);
-      }
-    }
-    return items;
-  };
-
-  render() {
-    return (
-      <Grid className={this.state.class}
-            columns={"repeat( 3, " + this.state.width / subGridSizeFactor + "px )"}
-            rows={"repeat( 3, " + this.state.width / subGridSizeFactor + "px )"}
-            gap={this.state.width / subGridRowGapFactor + "px"}
-      >
-        {
-          this.gridItems()
-        }
-      </Grid>
-    );
-  }
-});
-
-function GridSquare(props) {
-  console.log("NOOT");
-  return <Cell center middle className="sub-grid-cell"
-               left={props.row + 1}
-               top={props.column + 1}
-               onClick={props.onClick}
-  >
-    <div>{props.children}</div>
-  </Cell>
-}

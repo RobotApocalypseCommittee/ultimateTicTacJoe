@@ -14,27 +14,12 @@
   
 }
 
-.mainGrid {
-  width: 80%;
-  margin: 10px auto auto;
-  padding: 2%;
-  border-radius: 5px;
-  background-color: var(--color-primary-1);
-}
-
-.main-grid-cell {
-  padding: 1%;
-  border-radius: 5px;
-  background-color: var(--color-primary-4);
-}
-
-.sub-grid-cell{
-  border-radius: 5px;
-  background-color: var(--color-primary-3);
-}
 
 .App {
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-header {

@@ -6,14 +6,14 @@
     "express": "latest",
     "nanoid": "^1.0.4",
     "shortid": "^2.2.8",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "concurrently": "3.1.0"
   },
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
-    "client": "node start_client.js"
-  },
-  "devDependencies": {
-    "concurrently": "3.1.0"
+    "client": "node start_client.js",
+    "build": "node build.js",
+    "heroku-postbuild": "npm run build"
   }
 }

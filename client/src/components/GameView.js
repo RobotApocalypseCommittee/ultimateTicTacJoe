@@ -3,18 +3,16 @@ import PlayGridWithSubscription from "./PlayGrid";
 import ReactModal from 'react-modal';
 import GameStatusBar from "./GameStatusBar";
 import gameState from "../GameState"
-
-
 class GameView extends Component {
 
   render() {
     let url = window.location.protocol + "//" + window.location.host + "/#" + this.props.matchID;
     return (
-      <div>
+      <React.Fragment>
         <GameStatusBar url={url} state={this.props.status}/>
-        <PlayGridWithSubscription hello={"hi"}/>
+        <PlayGridWithSubscription/>
         <GameEndDialog isOpen={this.props.gameEnded} text={"hi"}/>
-      </div>
+      </React.Fragment>
     )
   }
 }
