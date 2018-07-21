@@ -40,7 +40,7 @@ class GameState {
     communicator.subscribeToDisconnect(() => {
       this.setState({status: gameStates.DISCONNECTED});
     });
-    communicator.subscribeToTurnChange((playerIndex, mainIndex)=> {
+    communicator.subscribeToTurnChange((playerIndex, mainIndex) => {
       if (playerIndex === this.state.playerIndex) {
         this.setState({
           turnCriteria: {mainIndex},
@@ -53,50 +53,60 @@ class GameState {
       }
     })
   }
-  setState(newState){
+
+  setState(newState) {
     this.state = Object.assign(this.state, newState);
     this.emitUpdate();
   }
-  _subscribe(fun){
+
+  _subscribe(fun) {
     this.subscribers.push(fun);
     return this.state
   }
-  _unsubscribe(fun){
+
+  _unsubscribe(fun) {
     this.subscribers.splice(this.subscribers.indexOf(fun), 1);
   }
+
   // This is a HOC to auto provide props
-  subscribe(desiredProps, WrappedComponent){
+  subscribe(desiredProps, WrappedComponent) {
     let thisGameState = this;
+
     // Desired Props is a list of the properties wanted fom state
     class WithSubscription extends Component {
       constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = desiredProps.reduce((a, e) => (a[e] = thisGameState.state[e], a), {});;
-
+        this.state = desiredProps.reduce((a, e) => (a[e] = thisGameState.state[e], a), {});
       }
-      componentDidMount(){
+
+      componentDidMount() {
         this.handleChange(thisGameState._subscribe(this.handleChange));
       }
-      componentWillUnmount(){
+
+      componentWillUnmount() {
         thisGameState._unsubscribe(this.handleChange)
       }
-      handleChange(newState){
+
+      handleChange(newState) {
         const subset = desiredProps.reduce((a, e) => (a[e] = newState[e], a), {});
         if (!areEqualShallow(subset, this.state)) {
           console.log(`${WithSubscription.displayName} state has changed to`, subset);
           this.setState(subset);
         }
       }
-      render(){
+
+      render() {
         return <WrappedComponent {...this.state} {...this.props}/>
       }
     }
+
     WithSubscription.displayName = `WithSubscription(${WrappedComponent.displayName || WrappedComponent.name || "Component"})`;
     return WithSubscription;
   }
-  emitUpdate(){
-    this.subscribers.forEach((fun)=>fun(this.state));
+
+  emitUpdate() {
+    this.subscribers.forEach((fun) => fun(this.state));
   }
 
 }

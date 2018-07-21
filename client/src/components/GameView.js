@@ -3,6 +3,7 @@ import PlayGridWithSubscription from "./PlayGrid";
 import ReactModal from 'react-modal';
 import GameStatusBar from "./GameStatusBar";
 import gameState from "../GameState"
+
 class GameView extends Component {
 
   render() {
@@ -20,7 +21,7 @@ class GameView extends Component {
 class GameEndDialog extends Component {
   render() {
     return (
-      <ReactModal isOpen={this.props.isOpen} contentLabel="Game Ended"  ariaHideApp={false}>
+      <ReactModal isOpen={this.props.isOpen} contentLabel="Game Ended" ariaHideApp={false}>
         <p>{this.props.text}</p>
         <button onClick={window.location.reload}>New Game</button>
       </ReactModal>

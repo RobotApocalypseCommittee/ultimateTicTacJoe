@@ -30,10 +30,11 @@ class App extends Component {
           ? <GameCreator/>
           : <GameView/>
         }
-        <ReactModal isOpen={this.props.status === gameStates.DISCONNECTED} contentLabel="Connection Failed" ariaHideApp={false}>
-            <p>We cannot connect to the server, and so you cannot play :(</p>
-            <p>Reload to attempt a reconnection</p>
-            <button onClick={window.location.reload}>Reload</button>
+        <ReactModal isOpen={this.props.status === gameStates.DISCONNECTED} contentLabel="Connection Failed"
+                    ariaHideApp={false}>
+          <p>We cannot connect to the server, and so you cannot play :(</p>
+          <p>Reload to attempt a reconnection</p>
+          <button onClick={window.location.reload}>Reload</button>
         </ReactModal>
       </div>
 

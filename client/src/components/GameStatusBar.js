@@ -17,7 +17,7 @@ const Input = styled.input`
 `;
 
 export default class GameStatusBar extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.statuses = {
       PREGAME: "Game does not exist yet?",
@@ -28,12 +28,13 @@ export default class GameStatusBar extends Component {
       DISCONNECTED: "You have been disconnected."
     };
   }
+
   render() {
     return (
-        <Div>
-          <Input type="text" value={this.props.url} readOnly/>
-          <Item>{this.statuses[this.props.state]}</Item>
-        </Div>
+      <Div>
+        <Input type="text" value={this.props.url} readOnly/>
+        <Item>{this.statuses[this.props.state]}</Item>
+      </Div>
     )
   }
 }
