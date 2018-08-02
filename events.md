@@ -76,7 +76,9 @@ All events have `playerID`, which was allocated to the client in `user-registere
       `type` : string = `'disconnect'`
       
       `playerIndex` : integer = the player who disconnected
+
  - invalid-operation
  
    Sent when the client attempts to perform an invalid operation
+
    `type` : string = One of `['unknown-match', 'invalid-move', 'invalid-authentication']`

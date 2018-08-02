@@ -52,7 +52,7 @@ function checkWin(board) {
 function calculateNextCriteria(board, lastMove) {
   let criteria = {};
   // Swap indexes
-  criteria.playerIndex = this.playerIDs.indexOf(lastMove.playerID) ? 0 : 1;
+  criteria.playerIndex = lastMove.playerIndex ? 0 : 1;
   criteria.mainIndex = lastMove.subIndex;
   if (board[criteria.mainIndex].indexOf("-") === -1) {
     // If square full, user can select any square(-1)

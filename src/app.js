@@ -8,13 +8,18 @@ io.on("connection", (socket) => {
   // Keep ID *TOP SECRET*
   let id = users.add_user(socket);
 
+  // Middleware to validate identity of user.
   socket.use((packet, next) => {
     if (packet[1].playerID !== id) {
-      next(new Error("Invalid userID!"));
+      socket.emit("invalid-operation", {
+        type: "invalid-authentication",
+        message: `playerID ${packet[1].playerID} does not match socket's id'`
+      });
     } else {
       return next();
     }
   });
+
   socket.emit("user-registered", {
     playerID: id
   });
@@ -35,7 +40,11 @@ io.on("connection", (socket) => {
       match.begin_game();
 
     } else {
-      console.error("Could not find match %s", data.matchID);
+      socket.emit("invalid-operation", {
+        type: "unknown-match",
+        message: `The match ${data.matchID} does not exist.`
+      });
+      console.error("Player %s attempted to join non-existent match %s", data.playerID, data.matchID);
     }
   });
 });

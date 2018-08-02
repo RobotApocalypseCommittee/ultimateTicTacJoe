@@ -51,7 +51,7 @@ class Match {
         this.playerIDs.splice(this.playerIDs.indexOf(playerID), 1);
         this.broadcast("end-game", {
           type: "disconnect",
-          playerID: this.playerIDs.indexOf(playerID)
+          playerIndex: this.playerIDs.indexOf(playerID)
         });
         this.destroy();
       })
@@ -83,7 +83,7 @@ class Match {
       if (UTTTLogic.checkWin(this.board)) {
         let winPacket = {
           type: "win",
-          playerID: UTTTLogic.getWin(this.board)
+          playerIndex: UTTTLogic.getWin(this.board)
         };
         this.broadcast("ended-game", winPacket);
         this.destroy();
@@ -91,6 +91,11 @@ class Match {
       }
       this.next_move_criteria = UTTTLogic.calculateNextCriteria(this.board, turn_object);
       this.broadcast("next-turn", this.next_move_criteria);
+    } else {
+      users.get_user(this.playerIDs[this.next_move_criteria.playerIndex]).emit("invalid-operation", {
+        type: "invalid-move",
+        message: "That move is invalid."
+      })
     }
   }
 
