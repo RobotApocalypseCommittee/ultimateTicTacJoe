@@ -13,7 +13,9 @@ export const ERROR_TYPES = {
 class Communicator {
   constructor() {
     this.playerID = null;
-    this.socket = io("ws://" + window.location.host, {
+    // Not allowed to downgrade security
+    const proto = window.location.protocol === "https:" ? "wss://" : "ws://";
+    this.socket = io(proto + window.location.host, {
       reconnection: false
     });
     window.io = this.socket;
