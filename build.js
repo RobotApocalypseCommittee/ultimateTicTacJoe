@@ -14,10 +14,12 @@ const fs = require('fs');
 fs.createReadStream('UTTLogic.js').pipe(fs.createWriteStream('client/src/UTTLogic.js'));
 
 // Run client npm install
-runClientNpm("install", (code)=>`Client NPM Install Finished with code ${code}`);
+runClientNpm("install", (code)=>{
+  console.log(`Client NPM Install Finished with code ${code}`)
+  // Run client build
+  runClientNpm("run build", (code)=>console.log(`Build finished with code ${code}`));
+});
 
-// Run client build
-runClientNpm("run build", (code)=>console.log(`Build finished with code ${code}`));
 
 
 
