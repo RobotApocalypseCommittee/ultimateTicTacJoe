@@ -3,6 +3,7 @@ import gameState from "../GameState";
 import GridSquare from './GridSquare';
 import styled from 'styled-components';
 import 'animate.css';
+import {getSubWin} from "../UTTLogic";
 
 const Div = styled.div`
 display: grid;
@@ -31,6 +32,10 @@ visibility: visible;
 border-radius: 5px;
 transition: visibility 0s linear 0s, opacity 300ms;
 
+.hiddenItem > & {
+opacity: 0;
+}
+
 ${Div}:hover & {
 opacity: 0;
 visibility: hidden;
@@ -51,8 +56,6 @@ class SubGrid extends Component {
     this.state = {
       class: "hiddenItem",
       rowWidth: 300,
-      crossedCells: [],
-      circledCells: [],
     };
 
   }
@@ -77,6 +80,7 @@ class SubGrid extends Component {
         items.push(<GridSquare key={items.length}
                                row={j}
                                column={i}
+                               active={this.props.active}
                                onClick={this.props.onCellClick.bind(null, items.length)}>
           {this.props.board[items.length] === -1
             ? ""
@@ -88,12 +92,13 @@ class SubGrid extends Component {
   };
 
   render() {
+    let floaterValue = getSubWin(this.props.board);
     return (
       <Div className={this.state.class}>
         {
           this.gridItems()
         }
-        <Floater><P>X</P></Floater>
+        {floaterValue !== null && <Floater><P>{this.props.letterSet[floaterValue.winner]}</P></Floater> }
       </Div>
     );
   }
