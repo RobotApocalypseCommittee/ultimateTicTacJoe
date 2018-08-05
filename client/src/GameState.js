@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import gameStates, {gameEndings} from "./GameStates";
 import communicator from "./Communicator";
 import {areEqualShallow} from "./utils";
-import {generateEmptyBoard} from "./UTTLogic";
+import {generateEmptyBoard} from "./UTTTLogic";
 
 // TODO: Should probably be using redux, be CBA right now
 // And yes, I did just implement a (worse) significant portion of redux-react etc.

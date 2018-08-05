@@ -3,7 +3,7 @@ import gameState from "../GameState";
 import GridSquare from './GridSquare';
 import styled from 'styled-components';
 import 'animate.css';
-import {getSubWin} from "../UTTLogic";
+import {getSubWin} from "../UTTTLogic";
 
 const Div = styled.div`
 display: grid;

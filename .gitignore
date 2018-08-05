@@ -129,4 +129,5 @@ typings/
 .serverless
 
 # UTTLogic Copy
-client/src/UTTLogic.js
+client/src/UTTTLogic.js
+server/src/UTTTLogic.js

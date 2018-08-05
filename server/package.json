@@ -1,0 +1,20 @@
+{
+  "name": "ultimatetictacjoe-server",
+  "version": "0.0.1",
+  "main": "server.js",
+  "private": true,
+  "dependencies": {
+    "express": "latest",
+    "nanoid": "^1.0.4",
+    "shortid": "^2.2.8",
+    "socket.io": "^2.1.1",
+    "concurrently": "3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "start:prod": "node src/server.js"
+  }
+}

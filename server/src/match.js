@@ -2,7 +2,7 @@
 const shortid = require("shortid");
 const users = require("./user_store");
 const matches = require("./matches");
-const UTTTLogic = require("../UTTLogic");
+const UTTTLogic = require("./UTTTLogic");
 
 class Match {
   constructor(XOPolicy) {
