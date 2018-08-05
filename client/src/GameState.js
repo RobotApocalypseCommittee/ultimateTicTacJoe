@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import gameStates, {gameEndings} from "./GameStates";
-import communicator from "./sockface";
+import communicator from "./Communicator";
 import {areEqualShallow} from "./utils";
 import {generateEmptyBoard} from "./UTTLogic";
 
@@ -17,7 +17,8 @@ class GameState {
       turnCriteria: null,
       board: generateEmptyBoard(),
       ending: gameEndings.UNENDED,
-      status: gameStates.DISCONNECTED
+      status: gameStates.WAITINGFORCONNECTION,
+      error: null
     };
     communicator.subscribeToRegistration((userID) => {
       this.setState({userID, status: gameStates.PREGAME});
@@ -38,7 +39,12 @@ class GameState {
       this.setState({board: newBoard});
     });
     communicator.subscribeToDisconnect(() => {
-      this.setState({status: gameStates.DISCONNECTED});
+      this.setState({
+        error: {
+          type: "disconnect",
+          message: "We cannot connect to the server. Please try reloading, or waiting till later."
+        }
+      });
     });
     communicator.subscribeToTurnChange((playerIndex, mainIndex) => {
       if (playerIndex === this.state.playerIndex) {
@@ -51,7 +57,29 @@ class GameState {
           status: gameStates.WAITFORTURN
         })
       }
+    });
+    communicator.subscribeToEndGame((type, playerIndex)=> {
+      if (type === "win") {
+        this.setState({
+          ending: playerIndex === this.state.playerIndex ? gameEndings.WIN : gameEndings.LOSS,
+          status: gameStates.GAMEENDED
+        })
+      } else {
+        this.setState({
+          ending: gameEndings.DISCONNECTION,
+          status: gameStates.GAMEENDED
+        });
+      }
+    });
+    communicator.subscribeToError((type, message)=> {
+      if (type !== "invalid-move") {
+      this.setState({
+        error: {
+          type, message
+        }
+      })}
     })
+
   }
 
   setState(newState) {
@@ -77,7 +105,10 @@ class GameState {
       constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = desiredProps.reduce((a, e) => (a[e] = thisGameState.state[e], a), {});
+        this.state = desiredProps.reduce((a, e) => {
+          a[e] = thisGameState.state[e];
+          return a;
+        }, {});
       }
 
       componentDidMount() {
@@ -89,9 +120,11 @@ class GameState {
       }
 
       handleChange(newState) {
-        const subset = desiredProps.reduce((a, e) => (a[e] = newState[e], a), {});
+        const subset = desiredProps.reduce((a, e) => {
+          a[e] = thisGameState.state[e];
+          return a;
+        }, {});
         if (!areEqualShallow(subset, this.state)) {
-          console.log(`${WithSubscription.displayName} state has changed to`, subset);
           this.setState(subset);
         }
       }

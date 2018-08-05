@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import communicator from '../sockface';
+import communicator from '../Communicator';
 
 export default class GameCreator extends Component {
   createGame() {

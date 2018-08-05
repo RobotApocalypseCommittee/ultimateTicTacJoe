@@ -23,7 +23,7 @@ function getSubWin(subBoard){
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
-    if (subBoard[a] && subBoard[a] === subBoard[b] && subBoard[a] === subBoard[c] && subBoard[a] !== -1) {
+    if (subBoard[a] === subBoard[b] && subBoard[a] === subBoard[c] && subBoard[a] !== -1) {
       return {winner:subBoard[a], line:lines[i]};
     }
   }
@@ -36,11 +36,11 @@ function checkSubWin(subBoard){
 
 function getWin(board) {
   let tempBoard = board.map(subBoard=>{
-    let winner = getSubWin(subBoard);
-    if (winner === null) {
+    let result = getSubWin(subBoard);
+    if (result === null) {
       return -1;
     }
-    return winner
+    return result.winner
   });
   return getSubWin(tempBoard)
 }
@@ -54,7 +54,7 @@ function calculateNextCriteria(board, lastMove) {
   // Swap indexes
   criteria.playerIndex = lastMove.playerIndex ? 0 : 1;
   criteria.mainIndex = lastMove.subIndex;
-  if (board[criteria.mainIndex].indexOf("-") === -1) {
+  if (board[criteria.mainIndex].indexOf(-1) === -1) {
     // If square full, user can select any square(-1)
     criteria.mainIndex = -1;
   }

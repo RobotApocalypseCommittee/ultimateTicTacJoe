@@ -49,7 +49,7 @@ class Match {
       // If user disconnects, game stops, and other user notified
       users.get_user(playerID).on("disconnect", () => {
         this.playerIDs.splice(this.playerIDs.indexOf(playerID), 1);
-        this.broadcast("end-game", {
+        this.broadcast("ended-game", {
           type: "disconnect",
           playerIndex: this.playerIDs.indexOf(playerID)
         });
@@ -83,7 +83,7 @@ class Match {
       if (UTTTLogic.checkWin(this.board)) {
         let winPacket = {
           type: "win",
-          playerIndex: UTTTLogic.getWin(this.board)
+          playerIndex: UTTTLogic.getWin(this.board).winner
         };
         this.broadcast("ended-game", winPacket);
         this.destroy();
@@ -100,6 +100,9 @@ class Match {
   }
 
   destroy() {
+    for (let i = 0; i < this.playerIDs.length; i++){
+      users.get_user(this.playerIDs[i]).removeAllListeners("turn-done")
+    }
     matches.remove_match(this.id);
   }
 }

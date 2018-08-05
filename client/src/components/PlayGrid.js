@@ -4,13 +4,8 @@ import 'animate.css';
 import styled from 'styled-components';
 import gameState from "../GameState";
 import gameStates from "../GameStates";
-import communicator from "../sockface";
+import communicator from "../Communicator";
 import SubGrid from "./SubGrid";
-
-const gridSizeFactor = 4;
-const subGridSizeFactor = 13;
-const gridRowGapFactor = 50;
-const subGridRowGapFactor = gridRowGapFactor * 3;
 
 const Div = styled.div.attrs({
   minimumavailablespace: props =>
@@ -45,7 +40,7 @@ class PlayGrid extends Component {
   handleCellClick(subSquare, cell) {
     console.log("Square: ", subSquare, ", Cell: ", cell);
     if (gameState.state.status === gameStates.PERFORMINGTURN) {
-      communicator.makeTurn(subSquare, cell);
+      communicator.makeTurn(this.props.playerIndex, subSquare, cell);
     }
   }
 
@@ -89,6 +84,7 @@ class PlayGrid extends Component {
                    onCellClick={this.handleCellClick.bind(this, items.length)}
                    board={this.props.board[items.length]}
                    key={items.length}
+                   active={gameState.state.status === gameStates.PERFORMINGTURN && (gameState.state.turnCriteria.mainIndex === items.length || gameState.state.turnCriteria.mainIndex === -1)}
           />);
       }
     }

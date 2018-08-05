@@ -1,8 +1,14 @@
-// SOCKetinterFACE
 // Contains code which handles most (basic) socket functionality
 // NOT for game logic
 
 import io from 'socket.io-client';
+
+
+export const ERROR_TYPES = {
+  UNKNOWN_MATCH: "unknown-match",
+  INVALID_MOVE: "invalid-move",
+  INVALID_AUTHENTICATION: "invalid-authentication"
+};
 
 class Communicator {
   constructor() {
@@ -29,6 +35,8 @@ class Communicator {
 
   subscribeToDisconnect(cb) {
     this.socket.on("disconnect", cb);
+    this.socket.on("connect_timeout", cb);
+    this.socket.on("connect_error", cb);
   }
 
   subscribeToBeginGame(cb) {
@@ -40,7 +48,12 @@ class Communicator {
   }
 
   subscribeToEndGame(cb) {
-    this.socket.on("ended-game", (obj) => cb(obj.type, obj.playerID))
+    this.socket.on("ended-game", (obj) => cb(obj.type, obj.playerIndex))
+  }
+
+  subscribeToError(cb) {
+
+    this.socket.on("invalid-operation", (obj)=> cb(obj.type, obj.message))
   }
 
   emit(evtName, data) {
@@ -62,9 +75,10 @@ class Communicator {
     this.emit("join-game", {matchID});
   }
 
-  makeTurn(mainIndex, subIndex) {
-    this.emit("turn-done", {mainIndex, subIndex});
+  makeTurn(playerIndex, mainIndex, subIndex) {
+    this.emit("turn-done", {mainIndex, subIndex, playerIndex});
   }
+
 
 }
 
