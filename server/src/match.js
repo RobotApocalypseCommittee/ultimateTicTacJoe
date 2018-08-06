@@ -56,8 +56,10 @@ class Match {
         this.destroy();
       })
     } else {
-      console.error("Cannot add more than two players!");
-      return false;
+      users.get_user(playerID).emit("invalid-operation", {
+        type: "match-full",
+        message: "You were too slow, and this match is already full."
+      })
     }
   }
 
@@ -78,7 +80,8 @@ class Match {
     turn_object.playerIndex = this.playerIDs.indexOf(turn_object.playerID);
     if (UTTTLogic.validateMove(this.board, this.next_move_criteria, turn_object)) {
       console.log("Valid turn received!");
-      this.board[turn_object.mainIndex][turn_object.subIndex] = turn_object.playerIndex;
+      this.board.subGrids[turn_object.mainIndex][turn_object.subIndex] = turn_object.playerIndex;
+      UTTTLogic.updateBoardWins(this.board);
       this.broadcast("updated-board", this.board);
       if (UTTTLogic.checkWin(this.board)) {
         let winPacket = {

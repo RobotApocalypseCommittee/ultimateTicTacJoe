@@ -6,16 +6,18 @@
   "engines": {
     "node": "8.2.1"
   },
-  "dependencies": {
+  "devDependencies": {
     "concurrently": "^3.1.0",
     "copyfiles": "^2.0.0",
     "npm-run-all": "^4.1.3",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+    "del-cli": "^1.1.0"
   },
   "scripts": {
     "build": "npm run build:move && cd client && npm run build",
     "build:move": "copyfiles UTTTLogic.js client/src && copyfiles UTTTLogic.js server/src",
-    "clean": "concurrently \"rimraf node_modules\" \"cd client && rimraf node_modules build\" \"cd server && rimraf node_modules build\"",
+    "clean": "concurrently \"cd client && rimraf node_modules build\" \"cd server && rimraf node_modules\" \"npm run clean:movedfiles\"",
+    "clean:movedfiles": "del-cli client/UTTTLogic.js && del-cli server/UTTTLogic.js",
     "heroku-postbuild": "npm run build",
     "install": "npm-run-all install:*",
     "install:client": "cd client && npm install",

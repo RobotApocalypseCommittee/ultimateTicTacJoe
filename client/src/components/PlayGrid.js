@@ -82,7 +82,8 @@ class PlayGrid extends Component {
         items.push(
           <SubGrid delay={(i * 3 + j) * 100}
                    onCellClick={this.handleCellClick.bind(this, items.length)}
-                   board={this.props.board[items.length]}
+                   board={this.props.board.subGrids[items.length]}
+                   overlayValue={this.props.board.grid[items.length]}
                    key={items.length}
                    active={gameState.state.status === gameStates.PERFORMINGTURN && (gameState.state.turnCriteria.mainIndex === items.length || gameState.state.turnCriteria.mainIndex === -1)}
           />);

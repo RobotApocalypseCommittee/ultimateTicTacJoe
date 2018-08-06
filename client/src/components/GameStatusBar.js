@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import communicator from "../Communicator";
+import gameStates from "../GameStates";
 
 const Div = styled.div`
     background-color: var(--color-primary-3);
@@ -70,7 +71,7 @@ export default class GameStatusBar extends Component {
     let message = this.state.errorMsg || this.statuses[this.props.state];
     return (
       <Div>
-        <Input type="text" value={this.props.url} readOnly/>
+        { this.props.state === gameStates.PREGAMESTART && <Input type="text" value={this.props.url} readOnly/> }
         <Item><ItemSpan onTransitionEnd={this.transitionEnd} error={this.state.error}>{message}</ItemSpan></Item>
       </Div>
     )

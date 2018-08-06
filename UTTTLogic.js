@@ -6,7 +6,7 @@ function validateMove(board, criteria, move) {
   return (// Player placed in correct main square
     (move.mainIndex === criteria.mainIndex || criteria.mainIndex === -1) &&
     // Square was available for placement
-    (board[move.mainIndex][move.subIndex] === -1)
+    (board.subGrids[move.mainIndex][move.subIndex] === -1)
   );
 }
 
@@ -24,7 +24,7 @@ function getSubWin(subBoard){
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (subBoard[a] === subBoard[b] && subBoard[a] === subBoard[c] && subBoard[a] !== -1) {
-      return {winner:subBoard[a], line:lines[i]};
+      return {winner: subBoard[a], line: lines[i]};
     }
   }
   return null;
@@ -34,15 +34,18 @@ function checkSubWin(subBoard){
   return getSubWin(subBoard) !== null;
 }
 
-function getWin(board) {
-  let tempBoard = board.map(subBoard=>{
-    let result = getSubWin(subBoard);
-    if (result === null) {
-      return -1;
+function updateBoardWins(board) {
+  for (let i = 0; i < board.grid.length; i++) {
+    if (board.grid[i] === -1) {
+      let win = getSubWin(board.subGrids[i]);
+      board.grid[i] = win !== null ? win.winner : -1
     }
-    return result.winner
-  });
-  return getSubWin(tempBoard)
+  }
+  return board
+}
+
+function getWin(board) {
+  return getSubWin(board.grid);
 }
 
 function checkWin(board) {
@@ -54,7 +57,7 @@ function calculateNextCriteria(board, lastMove) {
   // Swap indexes
   criteria.playerIndex = lastMove.playerIndex ? 0 : 1;
   criteria.mainIndex = lastMove.subIndex;
-  if (board[criteria.mainIndex].indexOf(-1) === -1) {
+  if (board.subGrids[criteria.mainIndex].indexOf(-1) === -1) {
     // If square full, user can select any square(-1)
     criteria.mainIndex = -1;
   }
@@ -70,9 +73,16 @@ function generateEmptyBoard() {
     }
     x.push(y);
   }
-  return x;
+  let y = [];
+  for (let i = 0; i < 9; i++) {
+    y.push(-1)
+  }
+  return {
+    subGrids: x,
+    grid: y
+  }
 }
 
-module.exports = {calculateNextCriteria, checkSubWin, checkWin, getSubWin, getWin, validateMove, generateEmptyBoard};
+module.exports = {calculateNextCriteria, checkSubWin, checkWin, getSubWin, getWin, validateMove, generateEmptyBoard, updateBoardWins};
 
 

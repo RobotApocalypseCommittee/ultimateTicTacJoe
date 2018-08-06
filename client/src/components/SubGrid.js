@@ -92,13 +92,12 @@ class SubGrid extends Component {
   };
 
   render() {
-    let floaterValue = getSubWin(this.props.board);
     return (
       <Div className={this.state.class}>
         {
           this.gridItems()
         }
-        {floaterValue !== null && <Floater><P>{this.props.letterSet[floaterValue.winner]}</P></Floater> }
+        {this.props.overlayValue !== -1 && <Floater><P>{this.props.letterSet[this.props.overlayValue]}</P></Floater> }
       </Div>
     );
   }
