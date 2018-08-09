@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import communicator from "../Communicator";
 import gameStates from "../GameStates";
+import ClipboardJS from "clipboard";
 
 const Div = styled.div`
     background-color: var(--color-primary-3);
@@ -10,7 +11,7 @@ const Div = styled.div`
     flex-wrap: nowrap;
 `;
 const Item = styled.div`
-    flex: 2;
+    flex: 1;
     margin: auto;
 `;
 
@@ -20,10 +21,6 @@ padding: 0.5em;
 background-color: ${props => props.error ? "#ff0000" : "transparent"};
 box-shadow: 0 0 ${props => props.error ? "40px" : "0px"} #ff0000;
 transition: background-color 3s, box-shadow 3s;
-`;
-const Input = styled.input`
-  flex: 1;
-  margin: auto;
 `;
 
 export default class GameStatusBar extends Component {
@@ -71,9 +68,46 @@ export default class GameStatusBar extends Component {
     let message = this.state.errorMsg || this.statuses[this.props.state];
     return (
       <Div>
-        { this.props.state === gameStates.PREGAMESTART && <Input type="text" value={this.props.url} readOnly/> }
+        { this.props.state === gameStates.PREGAMESTART && <UrlView url={this.props.url}/> }
         <Item><ItemSpan onTransitionEnd={this.transitionEnd} error={this.state.error}>{message}</ItemSpan></Item>
       </Div>
     )
+  }
+}
+
+const UrlContainerDiv = Div.extend`
+flex: 1.5;
+`
+
+const Input = styled.input`
+  margin: auto 0.5em auto auto;
+  flex: 1;
+`;
+
+const Button = Input.withComponent("button").extend`
+flex: 0.3;
+`;
+
+
+class UrlView extends Component {
+  constructor(props) {
+    super(props);
+    this.btnRef = React.createRef();
+  }
+  componentDidMount(){
+    this.clipboard = new ClipboardJS(this.btnRef.current)
+  }
+
+  componentWillUnmount(){
+    this.clipboard.destroy()
+  }
+
+  render() {
+    return (
+      <UrlContainerDiv>
+        <Input type="text" value={this.props.url} readOnly/>
+        <Button className="button-primary" data-clipboard-text={this.props.url} innerRef={this.btnRef}>Copy</Button>
+      </UrlContainerDiv>
+    );
   }
 }
