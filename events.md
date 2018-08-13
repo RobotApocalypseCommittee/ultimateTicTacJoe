@@ -9,6 +9,10 @@ All events have `playerID`, which was allocated to the client in `user-registere
    
    `XOProtocol` : integer = `0` for X, `1` for O and `2` for random
    
+   `gridLockState`: integer = whether moves can be done in a grid which has been won already
+    - `1` = locked when grid won
+    - `0` = locked when grid full
+   
  - join-game
    
    Requests to join a game

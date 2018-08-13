@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
   console.log("User %s connected.", id);
 
   socket.on("create-game", function (data) {
-    let new_match = new Match(data.XOProtocol);
+    let new_match = new Match(data);
     matches.add_match(new_match);
     new_match.add_player(data.playerID);
     console.log("Player %s created match %s", data.playerID, new_match.id);

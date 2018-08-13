@@ -69,8 +69,8 @@ class Communicator {
     }
   }
 
-  createGame(XOProtocol) {
-    this.emit("create-game", {XOProtocol});
+  createGame(XOProtocol, gridLockState) {
+    this.emit("create-game", {XOProtocol, gridLockState});
   }
 
   joinGame(matchID) {

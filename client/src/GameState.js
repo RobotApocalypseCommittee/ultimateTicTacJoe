@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import gameStates, {gameEndings} from "./GameStates";
 import communicator from "./Communicator";
 import {areEqualShallow} from "./utils";
-import {generateEmptyBoard} from "./UTTTLogic";
 
 // TODO: Should probably be using redux, be CBA right now
 // And yes, I did just implement a (worse) significant portion of redux-react etc.
@@ -15,7 +14,10 @@ class GameState {
       playerIndex: null,
       letterSet: null,
       turnCriteria: null,
-      board: generateEmptyBoard(),
+      board: {
+        subGrids: new Array(9).fill(new Array(9).fill(-1)),
+        grid: new Array(9).fill(-1)
+      },
       ending: gameEndings.UNENDED,
       status: gameStates.WAITINGFORCONNECTION,
       error: null
@@ -31,7 +33,6 @@ class GameState {
         matchID,
         letterSet,
         playerIndex,
-        board: generateEmptyBoard(),
         status: gameStates.PREGAMESTART
       });
     });

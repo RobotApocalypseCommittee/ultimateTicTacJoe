@@ -52,37 +52,54 @@ function checkWin(board) {
   return getWin(board) !== null;
 }
 
-function calculateNextCriteria(board, lastMove) {
-  let criteria = {};
-  // Swap indexes
-  criteria.playerIndex = lastMove.playerIndex ? 0 : 1;
-  criteria.mainIndex = lastMove.subIndex;
-  if (board.subGrids[criteria.mainIndex].indexOf(-1) === -1) {
-    // If square full, user can select any square(-1)
-    criteria.mainIndex = -1;
+
+function getCalculateNextCriteria(gridLockState) {
+  if (gridLockState === 0) {
+    return function(board, lastMove) {
+      let criteria = {};
+      // Swap indexes
+      criteria.playerIndex = lastMove.playerIndex ? 0 : 1;
+      criteria.mainIndex = lastMove.subIndex;
+      if (board.subGrids[criteria.mainIndex].indexOf(-1) === -1) {
+        // If square full, user can select any square(-1)
+        criteria.mainIndex = -1;
+      }
+      return criteria;
+    }
+  } else {
+    return function(board, lastMove) {
+      let criteria = {};
+      // Swap indexes
+      criteria.playerIndex = lastMove.playerIndex ? 0 : 1;
+      criteria.mainIndex = lastMove.subIndex;
+      if (board.subGrids[criteria.mainIndex].indexOf(-1) === -1 || checkSubWin(board.subGrids[criteria.mainIndex])) {
+        // If square won(or full), user can select any square(-1)
+        criteria.mainIndex = -1;
+      }
+      return criteria;
+    }
   }
-  return criteria;
 }
 
 function generateEmptyBoard() {
   let x = [];
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 9; i++){
     let y = [];
-    for (let j = 0; j < 9; j++){
-      y.push(-1);
+    for (let j = 0; j < 9; j++) {
+      y.push(-1)
     }
-    x.push(y);
+    x.push(y)
   }
-  let y = [];
-  for (let i = 0; i < 9; i++) {
-    y.push(-1)
+  let z = [];
+  for (let i = 0; i<9; i++){
+    z.push(-1);
   }
   return {
     subGrids: x,
-    grid: y
+    grid: z
   }
 }
 
-module.exports = {calculateNextCriteria, checkSubWin, checkWin, getSubWin, getWin, validateMove, generateEmptyBoard, updateBoardWins};
+module.exports = {getCalculateNextCriteria, checkSubWin, checkWin, getSubWin, getWin, validateMove, generateEmptyBoard, updateBoardWins};
 
 

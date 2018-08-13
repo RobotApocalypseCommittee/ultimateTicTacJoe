@@ -5,13 +5,13 @@ const matches = require("./matches");
 const UTTTLogic = require("./UTTTLogic");
 
 class Match {
-  constructor(XOPolicy) {
+  constructor(settings) {
     this.id = shortid.generate();
     this.board = UTTTLogic.generateEmptyBoard();
     this.next_move_criteria = null;
     this.playerIDs = [];
 
-    switch (XOPolicy) {
+    switch (settings.XOPolicy) {
       case 0:
         this.playerLetters = ["X", "O"];
         break;
@@ -21,6 +21,9 @@ class Match {
       default:
         this.playerLetters = Math.random() >= 0.5 ? ["X", "O"] : ["O", "X"];
     }
+
+    this.calculateNextCriteria = UTTTLogic.getCalculateNextCriteria(settings.gridLockState)
+
 
   }
 
@@ -92,7 +95,7 @@ class Match {
         this.destroy();
         return;
       }
-      this.next_move_criteria = UTTTLogic.calculateNextCriteria(this.board, turn_object);
+      this.next_move_criteria = this.calculateNextCriteria(this.board, turn_object);
       this.broadcast("next-turn", this.next_move_criteria);
     } else {
       users.get_user(this.playerIDs[this.next_move_criteria.playerIndex]).emit("invalid-operation", {
