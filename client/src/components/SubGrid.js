@@ -26,20 +26,10 @@ top: 2.5%;
 bottom: 2.5%;
 right: 2.5%;
 background-color: white;
-opacity: 0.7;
-visibility: visible;
+opacity: ${props=>props.hidden ? 0 : 0.7};
+visibility: ${props=>props.hidden ? "hidden" : "visible"};
 border-radius: 5px;
-transition: visibility 0s linear 0s, opacity 300ms;
-
-.hiddenItem > & {
-opacity: 0;
-}
-
-${Div}:hover & {
-opacity: 0;
-visibility: hidden;
-transition: visibility 0s linear 300ms, opacity 300ms;
-}
+transition: visibility 0s linear ${props=>props.hidden ? "300ms" : "0s"}, opacity 300ms;
 `;
 const P = styled.span`
 margin: 0;
@@ -55,7 +45,10 @@ class SubGrid extends Component {
     this.state = {
       class: "hiddenItem",
       rowWidth: 300,
+      floaterHidden: false
     };
+    this.onHoverEnd = this.onHoverEnd.bind(this);
+    this.onHoverBegin = this.onHoverBegin.bind(this);
 
   }
 
@@ -69,6 +62,14 @@ class SubGrid extends Component {
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
+  }
+
+  onHoverBegin() {
+    this.setState({floaterHidden: true});
+  }
+
+  onHoverEnd() {
+    this.setState({floaterHidden: false})
   }
 
 
@@ -92,11 +93,17 @@ class SubGrid extends Component {
 
   render() {
     return (
-      <Div className={this.state.class}>
+      <Div className={this.state.class} onMouseEnter={this.onHoverBegin}
+           onMouseLeave={this.onHoverEnd} onBlur={this.onHoverEnd}>
         {
           this.gridItems()
         }
-        {this.props.overlayValue !== -1 && <Floater><P>{this.props.letterSet[this.props.overlayValue]}</P></Floater> }
+        {this.props.overlayValue !== -1 &&
+        <Floater
+          onTouchStart={this.onHoverBegin}
+          hidden={this.state.floaterHidden}>
+          <P>{this.props.letterSet[this.props.overlayValue]}</P>
+        </Floater> }
       </Div>
     );
   }

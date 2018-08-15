@@ -6,12 +6,12 @@ const UTTTLogic = require("./UTTTLogic");
 
 class Match {
   constructor(settings) {
-    this.id = shortid.generate();
+    this.id = Math.floor(Math.random() * 1000000) + 1  ;
     this.board = UTTTLogic.generateEmptyBoard();
     this.next_move_criteria = null;
     this.playerIDs = [];
 
-    switch (settings.XOPolicy) {
+    switch (settings.XOProtocol) {
       case 0:
         this.playerLetters = ["X", "O"];
         break;
@@ -79,10 +79,8 @@ class Match {
 
 
   process_turn(turn_object) {
-    console.log("Processing turn");
     turn_object.playerIndex = this.playerIDs.indexOf(turn_object.playerID);
     if (UTTTLogic.validateMove(this.board, this.next_move_criteria, turn_object)) {
-      console.log("Valid turn received!");
       this.board.subGrids[turn_object.mainIndex][turn_object.subIndex] = turn_object.playerIndex;
       UTTTLogic.updateBoardWins(this.board);
       this.broadcast("updated-board", this.board);
