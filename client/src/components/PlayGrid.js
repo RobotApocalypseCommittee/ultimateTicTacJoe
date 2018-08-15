@@ -46,8 +46,10 @@ class PlayGrid extends Component {
 
   componentDidMount() {
     this.resizeTimer = null;
+    this.iosHackTimer = null;
     window.addEventListener("resize", this.throttleUpdates);
     this.updateSizing();
+    this.checkIOSHackTimer();
   }
 
   throttleUpdates() {
@@ -55,14 +57,30 @@ class PlayGrid extends Component {
       this.resizeTimer = setTimeout(() => {
         this.resizeTimer = null;
         this.updateSizing();
+        this.checkIOSHackTimer();
       }, 66);
     }
   }
+
+  checkIOSHackTimer(){
+    // IOS IS BAD
+    if (this.iosHackTimer){
+      clearTimeout(this.iosHackTimer);
+    }
+    this.iosHackTimer = setTimeout(()=>{
+      this.iosHackTimer = null;
+      this.updateSizing()
+    }, 500)
+  }
+
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.throttleUpdates);
     if (this.resizeTimer) {
       clearTimeout(this.resizeTimer);
+    }
+    if (this.iosHackTimer){
+      clearTimeout(this.iosHackTimer);
     }
   }
 
@@ -71,7 +89,8 @@ class PlayGrid extends Component {
     this.setState({
       width: element.clientWidth,
       height: element.clientHeight
-    })
+    });
+    console.log("UPDATE SIZING")
   }
 
 
