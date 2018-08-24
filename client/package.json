@@ -4,8 +4,8 @@
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
-    "animate.css": "^3.6.1",
     "clipboard": "^2.0.1",
+    "doiuse": "^4.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-modal": "^3.5.1",

@@ -18,6 +18,15 @@ class Matches {
     delete this.matches[id];
   }
 
+  generate_new_id(){
+    let potential = (Math.round(Math.random()*899999)+100000).toString();
+    if (this.matches.hasOwnProperty(potential)) {
+      return this.generate_new_id()
+    } else {
+      return potential
+    }
+  }
+
 }
 
 module.exports = new Matches();

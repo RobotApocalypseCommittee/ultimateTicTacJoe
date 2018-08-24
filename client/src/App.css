@@ -4,14 +4,13 @@
 :root {
   --color-primary-1: #2194AF;
   --color-primary-2: #EFFBFE;
-  --color-primary-3: #B5F1FF; 
+  --color-primary-3: #B5F1FF;
   --color-primary-4: #036A83;
   --color-primary-5: #0A3C48;
 }
-  
+
 .hiddenItem {
   visibility: hidden;
-  
 }
 
 

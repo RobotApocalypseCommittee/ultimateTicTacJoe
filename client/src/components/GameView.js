@@ -9,10 +9,9 @@ import {reload} from "../utils";
 class GameView extends Component {
 
   render() {
-    let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + this.props.matchID;
     return (
       <React.Fragment>
-        <GameStatusBar url={url} state={this.props.status}/>
+        <GameStatusBar code={this.props.matchID} state={this.props.status}/>
         <PlayGridWithSubscription/>
         <WrappedGameEndDialog/>
       </React.Fragment>

@@ -1,8 +1,19 @@
 import React, {Component} from 'react'
 import gameState from "../GameState";
 import GridSquare from './GridSquare';
-import styled from 'styled-components';
-import 'animate.css';
+import styled, {keyframes} from 'styled-components';
+
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+`
 
 const Div = styled.div`
 display: grid;
@@ -14,6 +25,10 @@ display: grid;
   padding: 1vmin;
   border-radius: 5px;
   position: relative;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-delay: ${props=>props.delay+"ms"};
+  animation-name: ${fadeInUp};
   `;
 
 const Floater = styled.div`
@@ -52,17 +67,7 @@ class SubGrid extends Component {
 
   }
 
-  componentDidMount() {
-    this.timeoutId = setTimeout(function () {
-      this.setState({class: "animated fadeInUp main-grid-cell"});
-    }.bind(this), this.props.delay);
-  }
 
-  componentWillUnmount() {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
-  }
 
   onHoverBegin() {
     this.setState({floaterHidden: true});
@@ -93,7 +98,7 @@ class SubGrid extends Component {
 
   render() {
     return (
-      <Div className={this.state.class} onMouseEnter={this.onHoverBegin}
+      <Div className="main-grid-cell" delay={this.props.delay} onMouseEnter={this.onHoverBegin}
            onMouseLeave={this.onHoverEnd} onBlur={this.onHoverEnd}>
         {
           this.gridItems()

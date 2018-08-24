@@ -6,7 +6,7 @@ const UTTTLogic = require("./UTTTLogic");
 
 class Match {
   constructor(settings) {
-    this.id = Math.floor(Math.random() * 1000000) + 1  ;
+    this.id = matches.generate_new_id();
     this.board = UTTTLogic.generateEmptyBoard();
     this.next_move_criteria = null;
     this.playerIDs = [];

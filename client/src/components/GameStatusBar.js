@@ -68,7 +68,7 @@ export default class GameStatusBar extends Component {
     let message = this.state.errorMsg || this.statuses[this.props.state];
     return (
       <Div>
-        { this.props.state === gameStates.PREGAMESTART && <UrlView url={this.props.url}/> }
+        { this.props.state === gameStates.PREGAMESTART && <UrlView code={this.props.code}/> }
         <Item><ItemSpan onTransitionEnd={this.transitionEnd} error={this.state.error}>{message}</ItemSpan></Item>
       </Div>
     )
@@ -77,7 +77,7 @@ export default class GameStatusBar extends Component {
 
 const UrlContainerDiv = Div.extend`
 flex: 1.5;
-`
+`;
 
 const Input = styled.input`
   margin: auto 0.5em auto auto;
@@ -86,6 +86,10 @@ const Input = styled.input`
 
 const Button = Input.withComponent("button").extend`
 flex: 0.3;
+`;
+
+const CodeText = Item.withComponent("span").extend`
+font-size: 1.5em;
 `;
 
 
@@ -103,10 +107,11 @@ class UrlView extends Component {
   }
 
   render() {
+    let url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + this.props.code
     return (
       <UrlContainerDiv>
-        <Input type="text" value={this.props.url} readOnly/>
-        <Button className="button-primary" data-clipboard-text={this.props.url} innerRef={this.btnRef}>Copy</Button>
+        <CodeText>{`Code: ${this.props.code}`}</CodeText>
+        <Button className="button-primary" data-clipboard-text={url} innerRef={this.btnRef}>Copy</Button>
       </UrlContainerDiv>
     );
   }

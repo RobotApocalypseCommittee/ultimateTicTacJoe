@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import 'animate.css';
 import styled from 'styled-components';
 import gameState from "../GameState";
 import gameStates from "../GameStates";
