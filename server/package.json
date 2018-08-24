@@ -1,6 +1,6 @@
 {
   "name": "ultimatetictacjoe-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "server.js",
   "private": true,
   "dependencies": {

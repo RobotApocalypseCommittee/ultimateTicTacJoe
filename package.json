@@ -1,8 +1,9 @@
 {
-  "name": "ultimatetictactoe",
-  "version": "0.0.1",
+  "name": "ultimatetictacjoe",
+  "version": "1.0.0",
   "repository": {},
   "license": "MIT",
+  "private": true,
   "engines": {
     "node": "8.2.1"
   },
